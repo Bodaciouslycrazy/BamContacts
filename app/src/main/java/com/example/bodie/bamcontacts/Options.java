@@ -9,11 +9,9 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import java.io.File;
+import java.util.List;
 
-public class Options extends AppCompatActivity {
-
-    protected Switch opShake;
-    protected Spinner opSort;
+public class Options extends PreferenceActivity {
 
     protected static final String filename = "contacts.txt";
     protected ReadContactsAsync importer;
@@ -25,57 +23,22 @@ public class Options extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_options);
+        //setContentView(R.layout.activity_options);
 
 
-
-
-        opShake = findViewById(R.id.opShake);
-        //opSort = findViewById(R.id.opSort);
-
-        opShake.setChecked(CList.ShakeAllowed);
-    }
-
-    public void OnShakeChange(View v)
-    {
-        CList.ShakeAllowed = opShake.isChecked();
-    }
-
-    public void OnSortMethodChange(View v)
-    {
 
     }
 
-    /**
-     * Imports contacts from the old text file.
-     * Uses my old ReadContactsAsync class
-     * @param v
-     */
-    public void OnImport(View v)
+
+    @Override
+    public void onBuildHeaders(List<Header> target)
     {
-        if(importer == null)
-        {
-            importer = new ReadContactsAsync();
-            importer.database = CList.DB;
-
-            File dir = getExternalFilesDir(null);
-            if(!dir.mkdirs())
-            {
-                Log.w("berror","DIDN'T MAKE DIRECTORY!!!");
-            }
-
-            File StorageFile = new File(dir.getAbsolutePath(), filename);
-            //Log.w("bwarn", StorageFile.getAbsolutePath());
-            importer.execute(StorageFile);
-        }
+        loadHeadersFromResource(R.xml.preferences, target);
     }
 
-    /**
-     * Tells the database to reinitialize.
-     * @param v
-     */
-    public void OnReinitialize(View v)
+    @Override
+    protected boolean isValidFragment(String fragName)
     {
-        CList.DB.ReInitialize();
+        return BamPreferenceFragment.class.getName().equals(fragName);
     }
 }

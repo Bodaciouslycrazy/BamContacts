@@ -4,5 +4,4 @@
         android:key="pref_shake"
         android:title="Shake to reverse"
         android:defaultValue="true" />
-
 </PreferenceScreen>

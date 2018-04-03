@@ -13,5 +13,15 @@
         android:id="@+id/menuSettings"
         android:icon="@drawable/ic_settings_black_24dp"
         android:title="Settings"
-        app:showAsAction="always" />
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/menuReinitialize"
+        android:title="Clear All Contacts"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/menuImport"
+        android:title="Import from TextFile"
+        app:showAsAction="collapseActionView" />
 </menu>

@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,23 +36,12 @@ import java.util.Collections;
 public class CList extends AppCompatActivity implements AdapterView.OnItemClickListener, ShakeHandler{
 
 
-    WriteContactsAsync WriteAsync;
+    ReadContactsAsync importer;
 
-    //protected Toolbar TBar;
-    //protected TextView ShakeDebugConfirm;
-    //protected TextView ShakeDebugUpdate;
     protected ListView LV;
     protected ContactCursorAdapter Adapter;
 
-    //MAKE SURE TO NEVER SET THIS SO A NEW ARRAY LIST.
-    //it may screw up the adapter.
-    //protected ArrayList<Contact> ContactList;
-
-    //Used to know what contact to remove after the CView activity returns.
-    protected int RemoveIndex = 0;
-
-    //File info for read/write
-    protected File StorageFile;
+    //For old contacts file.
     protected static final String filename = "contacts.txt";
 
     //shake listener
@@ -60,10 +50,8 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
     public static boolean ShakeAllowed = true;
 
 
-    //**********DATABASE VARS***********
+    //Database vars
     public static ContactDB DB;
-
-
 
 
 
@@ -146,6 +134,12 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
             case R.id.menuSettings:
                 MenuOpenSettings();
                 break;
+            case R.id.menuImport:
+                MenuImport();
+                break;
+            case R.id.menuReinitialize:
+                MenuReinitialize();
+                break;
         }
 
         return true;
@@ -167,6 +161,35 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
     {
         Intent I = new Intent( this, Options.class);
         startActivityForResult(I, 30);
+    }
+
+    public void MenuImport()
+    {
+        if(importer == null)
+        {
+            importer = new ReadContactsAsync();
+            importer.database = CList.DB;
+
+            File dir = getExternalFilesDir(null);
+            if(!dir.mkdirs())
+            {
+                Log.w("berror","DIDN'T MAKE DIRECTORY!!!");
+            }
+
+            File StorageFile = new File(dir.getAbsolutePath(), filename);
+            //Log.w("bwarn", StorageFile.getAbsolutePath());
+            importer.execute(StorageFile);
+        }
+
+        Toast.makeText(this, "MenuImport clicked.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void MenuReinitialize()
+    {
+        DB.ReInitialize();
+        Adapter.changeCursor(DB.GetSortedList());
+        Adapter.notifyDataSetChanged();
+        Toast.makeText(this, "Contacts cleared.", Toast.LENGTH_SHORT).show();
     }
     ///endregion
 
@@ -281,6 +304,7 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
     {
         Contact.AtoZ = !Contact.AtoZ;
         Adapter.changeCursor( DB.GetSortedList() );
+        Toast.makeText(this, "Contacts reversed.", Toast.LENGTH_SHORT);
     }
 
     ///region DEPRECATED METHODS
