@@ -1,0 +1,335 @@
+package com.example.bodie.bamcontacts;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.support.annotation.MainThread;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class CList extends AppCompatActivity implements AdapterView.OnItemClickListener, ShakeHandler{
+
+
+    WriteContactsAsync WriteAsync;
+
+    //protected Toolbar TBar;
+    //protected TextView ShakeDebugConfirm;
+    //protected TextView ShakeDebugUpdate;
+    protected ListView LV;
+    protected ContactCursorAdapter Adapter;
+
+    //MAKE SURE TO NEVER SET THIS SO A NEW ARRAY LIST.
+    //it may screw up the adapter.
+    //protected ArrayList<Contact> ContactList;
+
+    //Used to know what contact to remove after the CView activity returns.
+    protected int RemoveIndex = 0;
+
+    //File info for read/write
+    protected File StorageFile;
+    protected static final String filename = "contacts.txt";
+
+    //shake listener
+    protected ShakeListener SListener;
+    protected SensorManager SManager;
+    public static boolean ShakeAllowed = true;
+
+
+    //**********DATABASE VARS***********
+    public static ContactDB DB;
+
+
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_clist);
+        setSupportActionBar( (Toolbar) findViewById(R.id.toolbar));
+
+        //***************SETUP******************
+        DB = new ContactDB(this);
+
+
+        //ShakeDebugConfirm = findViewById(R.id.shakeDebugConfirm);
+        //ShakeDebugUpdate = findViewById(R.id.shakeDebugUpdate);
+
+        LV = findViewById(R.id.mainList);
+        Adapter = new ContactCursorAdapter(this, null);
+        LV.setAdapter( Adapter );
+        LV.setOnItemClickListener(this);
+
+
+        SManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        SListener = new ShakeListener(this);
+
+        //*************************************
+        //Old code from reading data from file.
+        //READ FILE
+        //Find the file where contacts are stored.
+        /*
+        File dir = getExternalFilesDir(null);
+        if(!dir.mkdirs())
+        {
+            Log.w("berror","DIDN'T MAKE DIRECTORY!!!");
+        }
+
+        StorageFile = new File(dir.getAbsolutePath(), filename);
+        //Log.w("bwarn", StorageFile.getAbsolutePath());
+        ReadContactsAsync read = new ReadContactsAsync();
+        read.callback = this; //give the async task a reference so it can call a method when done.
+        read.execute(StorageFile);
+        */
+
+        //Set up Database
+    }
+
+    ///region OptionsMenu
+    /**
+     * Creates the options menu in the app bar.
+     * Option items are defined in menu_main.xml
+     * @param m
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu m)
+    {
+        MenuInflater mi = getMenuInflater();
+        mi.inflate(R.menu.menu_main, m);
+        return true;
+    }
+
+
+    /**
+     * This gets a callback whenever an option item has been clicked.
+     * Use these for adding new contacts and opening menu activity.
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+
+        Log.w("bwarn", "Menu Item has been selected: " + item.toString() );
+
+        switch(item.getItemId())
+        {
+            case R.id.menuAddContact:
+                MenuAddContact();
+                break;
+            case R.id.menuSettings:
+                MenuOpenSettings();
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * Menu event for adding a new contact.
+     */
+    public void MenuAddContact()
+    {
+        Intent I = new Intent(this, CView.class);
+        startActivityForResult(I, CView.REQUEST_NEW_CONTACT);
+    }
+
+    /**
+     * Menu event for opening the options activity.
+     */
+    public void MenuOpenSettings()
+    {
+        Intent I = new Intent( this, Options.class);
+        startActivityForResult(I, 30);
+    }
+    ///endregion
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if(ShakeAllowed)
+        {
+            Sensor s = SManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            SManager.registerListener(SListener, s, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+
+        Adapter.changeCursor( DB.GetSortedList() );
+        Adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        SManager.unregisterListener(SListener);
+        super.onPause();
+    }
+
+    /**
+     * Recieves the result from CView activity.
+     * @param reqCode the request code you sent to the activity
+     * @param resCode the response code it returned to you
+     * @param data Intent data, which includes the contact.
+     */
+    @Override
+    protected void onActivityResult(int reqCode, int resCode, Intent data)
+    {
+        //do nothing if they pressed the back button.
+        if(resCode == CView.RESULT_CANCEL)
+            return;
+
+        Contact returnedContact = (Contact)data.getSerializableExtra("contact");
+
+        if(reqCode == CView.REQUEST_NEW_CONTACT)
+        {
+            if(resCode == CView.RESULT_OK)
+                DB.AddContact( returnedContact );
+        }
+        else if(reqCode == CView.REQUEST_EDIT_CONTACT)
+        {
+            if(resCode == CView.RESULT_OK)
+            {
+                DB.UpdateContact( returnedContact );
+            }
+            else if(resCode == CView.RESULT_DELETED)
+            {
+                DB.RemoveContact( returnedContact );
+            }
+        }
+
+
+        /*
+        Adapter.notifyDataSetChanged();
+
+        if(WriteAsync != null)
+            WriteAsync.cancel(false);
+
+
+        WriteAsync = new WriteContactsAsync();
+        WriteAsync.StorageFile = StorageFile;
+        Object[] uncastedList = ContactList.toArray();
+        Contact[] castedList = new Contact[uncastedList.length];
+        for(int i = 0; i < castedList.length; i++)
+        {
+            castedList[i] = (Contact)uncastedList[i];
+        }
+        WriteAsync.execute(castedList);
+        */
+    }
+
+
+
+    /**
+     * Click handler for list items.
+     * @param apt which adapter was interacted with
+     * @param v which view was clicked
+     * @param pos position of contact in array
+     * @param id I don't think this needs to be used....
+     */
+    @Override
+    public void onItemClick(AdapterView<?> apt, View v, int pos, long id)
+    {
+        ContactViewHolder holder = (ContactViewHolder)v.getTag();
+        Contact c = DB.GetContactById(holder._id);
+
+        if(c != null)
+        {
+            Intent I = new Intent(this, CView.class);
+            I.putExtra("contact", c);
+            startActivityForResult(I, CView.REQUEST_EDIT_CONTACT);
+        }
+        else
+        {
+            Log.e("berror", "Could not find contact.");
+        }
+    }
+
+
+
+    /**
+     * Implemented from ShakeHandeler
+     * Receives the onShake call from Shake listener
+     * Switches the sorting style, and then notifies adapter of change.
+     */
+    public void onShake()
+    {
+        Contact.AtoZ = !Contact.AtoZ;
+        Adapter.changeCursor( DB.GetSortedList() );
+    }
+
+    ///region DEPRECATED METHODS
+
+
+
+    /**DEPRECATED
+     *
+     *
+     * Sorts the contact lists in the given order.
+     *
+     * Does NOT notify the adapter that the list changed.
+     * You have to notify it yourself.
+     *
+     * @param AtoZ - if true, sort AtoZ. Otherwize, sort ZtoA.
+     */
+    protected void SortContacts(boolean AtoZ)
+    {
+        Contact.AtoZ = AtoZ;
+        //Collections.sort(ContactList);
+        //Adapter.notifyDataSetChanged();
+    }
+
+
+    /**DEPRECATED
+     *
+     *
+     * Shorthand for sorting the list with the current direction.
+     */
+    public void SortContacts()
+    {
+        SortContacts(Contact.AtoZ);
+    }
+
+
+    /**
+     * DEPRECATED
+     *
+     * Loads a list of contacts into the activity.
+     * Used as a callback for ReadContactsAsync
+     * @param newList
+     */
+    public void loadNewContactList(ArrayList<Contact> newList)
+    {
+        //ContactList.clear();
+        //ContactList.addAll(newList);
+        SortContacts(true);
+        Adapter.notifyDataSetChanged();
+    }
+    ///endregion
+
+}

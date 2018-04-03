@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BamContacts</string>
+    <string name="requiredFirst">The first name field is required.</string>
+    <string name="requiredLast">The last name field is required.</string>
+    <string name="requiredPhone">The phone number field is required.</string>
+    <string name="errPhone">The phone number is not in the correct format.</string>
+    <string name="lblShake">Shake to Reverse</string>
+    <string name="lblSort">Sort by...</string>
+    <string name="btnImport">Import from Text File</string>
+    <string name="btnReinitialize">Reinitialize Database</string>
+    <string-array name="sortOptions">
+        <item>First Name</item>
+        <item>Last Name</item>
+    </string-array>
+</resources>
