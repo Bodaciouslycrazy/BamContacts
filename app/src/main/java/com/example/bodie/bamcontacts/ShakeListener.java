@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class ShakeListener implements SensorEventListener {
 
     //constants
-    final float DIFFERENCE_THRESHOLD = 33f;
+    final float DIFFERENCE_THRESHOLD = 31f;
     final int TIME = 500; //measured in millis
     final int COOLDOWN = 1000; //measured in millis.
 

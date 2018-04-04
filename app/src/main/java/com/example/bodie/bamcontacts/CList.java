@@ -2,12 +2,14 @@ package com.example.bodie.bamcontacts;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +54,9 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
 
     //Database vars
     public static ContactDB DB;
+
+    //Preferences
+    protected SharedPreferences preferences;
 
 
 
@@ -160,7 +165,9 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
     public void MenuOpenSettings()
     {
         Intent I = new Intent( this, Options.class);
-        startActivityForResult(I, 30);
+        //startActivityForResult(I, 30);
+        startActivity(I);
+
     }
 
     public void MenuImport()
@@ -197,8 +204,11 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
     public void onResume()
     {
         super.onResume();
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if(ShakeAllowed)
+
+
+        if( preferences.getBoolean("pref_shake", true) )
         {
             Sensor s = SManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             SManager.registerListener(SListener, s, SensorManager.SENSOR_DELAY_NORMAL);

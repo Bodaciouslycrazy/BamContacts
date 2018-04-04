@@ -1,5 +1,6 @@
 package com.example.bodie.bamcontacts;
 
+import android.app.Activity;
 import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +12,8 @@ import android.widget.Switch;
 import java.io.File;
 import java.util.List;
 
-public class Options extends PreferenceActivity {
+//public class Options extends PreferenceActivity {
+public class Options extends Activity {
 
     protected static final String filename = "contacts.txt";
     protected ReadContactsAsync importer;
@@ -25,15 +27,15 @@ public class Options extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_options);
 
-
-
+        getFragmentManager().beginTransaction().replace( android.R.id.content , new BamPreferenceFragment()).commit();
     }
 
 
+    /*
     @Override
     public void onBuildHeaders(List<Header> target)
     {
-        loadHeadersFromResource(R.xml.preferences, target);
+        loadHeadersFromResource(R.xml.preference_headers, target);
     }
 
     @Override
@@ -41,4 +43,5 @@ public class Options extends PreferenceActivity {
     {
         return BamPreferenceFragment.class.getName().equals(fragName);
     }
+    */
 }

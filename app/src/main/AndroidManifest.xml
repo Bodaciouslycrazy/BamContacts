@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CView" />
-        <activity android:name=".Options"></activity>
+        <activity android:name=".Options"
+            android:label="Preferences"></activity>
     </application>
 
 </manifest>

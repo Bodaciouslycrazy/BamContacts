@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,9 @@ public class BamPreferenceFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        //PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
+
         addPreferencesFromResource(R.xml.preferences);
     }
 }
