@@ -36,15 +36,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-public class CList extends AppCompatActivity implements AdapterView.OnItemClickListener, ShakeHandler{
-
-
-    ReadContactsAsync importer;
+public class CList extends AppCompatActivity implements AdapterView.OnItemClickListener, ShakeHandler, ContactWriteListener, ContactReadListener{
 
     protected ListView LV;
     protected ContactCursorAdapter Adapter;
 
-    //For old contacts file.
     protected static final String filename = "contacts.txt";
 
     //shake listener
@@ -56,6 +52,11 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
 
     //Preferences
     protected SharedPreferences preferences;
+
+
+    //OldFile readers and writers
+    WriteContactsAsync oldWrite;
+    ReadContactsAsync oldRead;
 
 
 
@@ -141,6 +142,9 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
             case R.id.menuImport:
                 MenuImport();
                 break;
+            case R.id.menuExport:
+                MenuExport();
+                break;
             case R.id.menuReinitialize:
                 MenuReinitialize();
                 break;
@@ -174,23 +178,32 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
      */
     public void MenuImport()
     {
-        if(importer == null)
-        {
-            importer = new ReadContactsAsync();
-            importer.database = CList.DB;
-
-            File dir = getExternalFilesDir(null);
-            if(!dir.mkdirs())
-            {
-                Log.w("berror","DIDN'T MAKE DIRECTORY!!!");
-            }
-
-            File StorageFile = new File(dir.getAbsolutePath(), filename);
-            //Log.w("bwarn", StorageFile.getAbsolutePath());
-            importer.execute(StorageFile);
+        if(oldRead == null) {
+            oldRead = new ReadContactsAsync();
+            oldRead.listener = this;
+            oldRead.StorageFile = getOldStorageFile();
+            oldRead.execute( DB );
         }
+        else
+        {
+            //Already reading, hoooold on!
+        }
+        //Toast.makeText(this, "MenuImport clicked.", Toast.LENGTH_SHORT).show();
+    }
 
-        Toast.makeText(this, "MenuImport clicked.", Toast.LENGTH_SHORT).show();
+    public void MenuExport()
+    {
+        if(oldWrite == null)
+        {
+            oldWrite = new WriteContactsAsync();
+            oldWrite.listener = this;
+            oldWrite.StorageFile = getOldStorageFile();
+            oldWrite.execute( DB );
+        }
+        else
+        {
+            //Already writing! Hold ooooon!
+        }
     }
 
     /**
@@ -204,6 +217,9 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
         Toast.makeText(this, "Contacts cleared.", Toast.LENGTH_SHORT).show();
     }
     ///endregion
+
+
+
 
 
     @Override
@@ -321,8 +337,50 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
         Toast.makeText(this, "Contacts reversed.", Toast.LENGTH_SHORT).show();
     }
 
+
+    ///region Old File Interface
+
+    public void onContactFileRead(boolean ok)
+    {
+        oldRead = null;
+        Adapter.changeCursor(DB.GetSortedList());
+        Adapter.notifyDataSetChanged();
+
+        getOldStorageFile().delete();
+
+        String readText = ok ? "Read contacts from old file." : "Text file not found.";
+        Toast.makeText(this, readText, Toast.LENGTH_SHORT).show();
+    }
+
+    public void onContactFileWrite(boolean ok)
+    {
+        oldWrite = null;
+
+        String writeText = ok ? "Finished writing to old file!" : "There was an error writing to old file.";
+        Toast.makeText(this, writeText, Toast.LENGTH_SHORT).show();
+    }
+
+    ///endregion
+
     ///region DEPRECATED METHODS
 
+    protected File getOldStorageFile()
+    {
+        File dir = getExternalFilesDir(null);
+        if(!dir.mkdirs())
+        {
+            Log.w("berror","DIDN'T MAKE DIRECTORY!!!");
+        }
+
+        File StorageFile = new File(dir.getAbsolutePath(), filename);
+
+        if(StorageFile == null)
+        {
+            Log.e("berror", "Could not find OldStorageFile!");
+        }
+
+        return StorageFile;
+    }
 
 
     /**DEPRECATED

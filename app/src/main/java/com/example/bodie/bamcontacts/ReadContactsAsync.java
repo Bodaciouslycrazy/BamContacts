@@ -16,10 +16,12 @@ import java.util.ArrayList;
  * Created by Bodie on 3/8/2018.
  */
 
-public class ReadContactsAsync extends AsyncTask<File, Integer, ArrayList<Contact>> {
+public class ReadContactsAsync extends AsyncTask<ContactDB, Integer, ArrayList<Contact>> {
 
     public File StorageFile;
-    ContactDB database;
+    ContactReadListener listener;
+    ContactDB DB;
+
     /**
      * reads contacts from external storage and puts them into the list
      * does not use the param. Just feed an empty string.
@@ -27,20 +29,9 @@ public class ReadContactsAsync extends AsyncTask<File, Integer, ArrayList<Contac
      * @return
      */
     @Override
-    protected ArrayList<Contact> doInBackground(File[] params)
+    protected ArrayList<Contact> doInBackground(ContactDB[] params)
     {
-        /*
-        checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        //if don't have storage permission, just die.
-        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            Log.e("berror", "Don't have read permission!!!");
-            return null;
-        }
-        */
-
-        StorageFile = params[0];
+        DB = params[0];
         if(StorageFile == null)
         {
             Log.e("berror","Can't read from a null file!");
@@ -94,19 +85,13 @@ public class ReadContactsAsync extends AsyncTask<File, Integer, ArrayList<Contac
     @Override
     protected void onPostExecute(ArrayList<Contact> contacts)
     {
-        //callback.loadNewContactList( contacts );
-
-        if(contacts == null)
-        {
-
-            Log.e("berror","No file found.");
-            return;
+        if(contacts != null) {
+            for (int i = 0; i < contacts.size(); i++) {
+                DB.AddContact(contacts.get(i));
+            }
         }
 
-        for(int i = 0; i < contacts.size(); i++)
-        {
-            database.AddContact( contacts.get(i));
-        }
+        listener.onContactFileRead(contacts != null);
     }
 
     /**

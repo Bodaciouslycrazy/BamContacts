@@ -2,6 +2,7 @@ package com.example.bodie.bamcontacts;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -13,22 +14,28 @@ import java.io.FileWriter;
  * Created by Bodie on 3/8/2018.
  */
 
-public class WriteContactsAsync extends AsyncTask<Contact, Integer, Boolean> {
+public class WriteContactsAsync extends AsyncTask<ContactDB, Integer, Boolean> {
 
-    public File StorageFile;
+    protected File StorageFile;
+    protected ContactWriteListener listener;
+
+    protected int status = 0;
+
     /**
      * Writes all contacts to external storage.
-     * Does not use params, just feed an empty string.
-     * @param ContactList
+     * Give it a DB to query from.
+     * @param DBs
      * @return
      */
     @Override
-    protected Boolean doInBackground(Contact[] ContactList)
+    protected Boolean doInBackground(ContactDB[] DBs)
     {
-        //File StorageFile = params[0];
+        ContactDB DB = DBs[0];
+
         if(StorageFile == null)
         {
             Log.e("berrer", "Can't write to a null file!");
+            return false;
         }
 
         //wait for storage to be available.
@@ -46,18 +53,15 @@ public class WriteContactsAsync extends AsyncTask<Contact, Integer, Boolean> {
             StorageFile.createNewFile();
             FileWriter fw = new FileWriter(StorageFile);
 
-            for(int i = 0; i < ContactList.length; i++)
+            Cursor cursor = DB.GetSortedList(true);
+
+            while( cursor.moveToNext() )
             {
-                String next = ContactList[i].getWriteableString();
+                Contact c = new Contact();
+                c.readFromCursor( cursor );
+                String next = c.getWriteableString();
                 fw.write(next + "\n");
 
-
-                //check for cancellation
-                if(isCancelled())
-                {
-                    fw.close();
-                    return false;
-                }
             }
 
             fw.close();
@@ -78,7 +82,8 @@ public class WriteContactsAsync extends AsyncTask<Contact, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean done)
     {
-        //nothing needs to be done, file was written.
+        status = 1;
+        listener.onContactFileWrite(done);
     }
 
     /**

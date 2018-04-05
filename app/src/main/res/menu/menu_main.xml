@@ -24,4 +24,9 @@
         android:id="@+id/menuImport"
         android:title="Import from TextFile"
         app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/menuExport"
+        android:title="Export to TextFile"
+        app:showAsAction="collapseActionView" />
 </menu>

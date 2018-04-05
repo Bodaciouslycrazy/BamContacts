@@ -337,7 +337,7 @@ public class Contact implements Serializable, Comparable<Contact>{
 
     public static Calendar stringToCalendar(String s)
     {
-        SimpleDateFormat sdf = new SimpleDateFormat();
+        SimpleDateFormat sdf = new SimpleDateFormat(DateFormat);
         Calendar c = Calendar.getInstance();
 
         try

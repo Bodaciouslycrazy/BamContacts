@@ -129,10 +129,11 @@ public class ContactDB {
      * This cursor only has the fname, lname and phone columns.
      * @return Cursor.
      */
-    public Cursor GetSortedList()
+    public Cursor GetSortedList(boolean fullColls)
     {
 
         String[] cols = {"_id", "fname", "lname", "phone"};
+        if(fullColls) cols = null;
         //String orderBy = Contact.SortByLast ? "lname" : "fname";
 
         //This gets the sort preference from shared preference. It has to add a space to it though.
@@ -141,6 +142,11 @@ public class ContactDB {
 
         return Database.query("Contacts", cols, null, null, null, null, orderBy + direction, null);
         //return Database.rawQuery("SELECT * FROM Contacts ORDER BY " + orderBy + direction, null);
+    }
+
+    public Cursor GetSortedList()
+    {
+        return GetSortedList(false);
     }
 
     /**
