@@ -12,15 +12,14 @@ import android.widget.Switch;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Simple activity to show preferences.
+ * Don't use PreferenceActivity. It requires headers, which kinda ruin the UI.
+ * Instead, just show the BamPreferenceFragment. It has all the preferences you need.
+ */
+
 //public class Options extends PreferenceActivity {
 public class Options extends Activity {
-
-    protected static final String filename = "contacts.txt";
-    protected ReadContactsAsync importer;
-
-
-    //I should probably use intents to get/return values to the list activity...
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

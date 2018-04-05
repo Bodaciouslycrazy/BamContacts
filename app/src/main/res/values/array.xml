@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sortOptionEntries">
+        <item>First Name</item>
+        <item>Last Name</item>
+    </string-array>
+
+    <string-array name="sortOptionValues">
+        <item>fname</item>
+        <item>lname</item>
+    </string-array>
+
+</resources>

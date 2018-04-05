@@ -28,8 +28,8 @@ public class Contact implements Serializable, Comparable<Contact>{
 
     public static final String DateFormat = "MM/dd/yyyy";
 
-    public static boolean AtoZ;
-    public static boolean SortByLast;
+    //public static boolean AtoZ;
+    //public static boolean SortByLast;
 
     public Contact()
     {
@@ -287,13 +287,16 @@ public class Contact implements Serializable, Comparable<Contact>{
     //endregion
 
 
-    /**
+    /**DEPRECATED
+     *
+     *
      * Used to sort contacts with each other.
      * @param other
      * @return
      */
     public int compareTo(Contact other)
     {
+        /*
         int comp = 0;
 
         if(SortByLast)
@@ -319,6 +322,9 @@ public class Contact implements Serializable, Comparable<Contact>{
 
         //retuns the negative version of the value when FirstToLast is false.
         return AtoZ ? comp : -1 * comp;
+        */
+
+        return 0;
     }
 
     //region StaticFunctions

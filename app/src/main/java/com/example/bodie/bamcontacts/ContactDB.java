@@ -2,8 +2,10 @@ package com.example.bodie.bamcontacts;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.Date;
@@ -14,12 +16,21 @@ import java.util.Date;
 
 public class ContactDB {
 
+    //private Context ctx;
     private ContactDBHelper dbHelper;
     private SQLiteDatabase Database;
 
-    public ContactDB(Context ctx)
+    private SharedPreferences preferences;
+
+    public boolean AtoZ = true;
+
+    public ContactDB(Context context)
     {
-        dbHelper = new ContactDBHelper(ctx);
+        //ctx = context;
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        dbHelper = new ContactDBHelper(context);
         Database = dbHelper.getWritableDatabase();
     }
 
@@ -120,9 +131,13 @@ public class ContactDB {
      */
     public Cursor GetSortedList()
     {
+
         String[] cols = {"_id", "fname", "lname", "phone"};
-        String orderBy = Contact.SortByLast ? "lname" : "fname";
-        String direction = Contact.AtoZ ? " DESC" : " ASC";
+        //String orderBy = Contact.SortByLast ? "lname" : "fname";
+
+        //This gets the sort preference from shared preference. It has to add a space to it though.
+        String orderBy = " " + preferences.getString("pref_sort", "fname");
+        String direction = AtoZ ? " ASC" : " DESC";
 
         return Database.query("Contacts", cols, null, null, null, null, orderBy + direction, null);
         //return Database.rawQuery("SELECT * FROM Contacts ORDER BY " + orderBy + direction, null);

@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 public class CList extends AppCompatActivity implements AdapterView.OnItemClickListener, ShakeHandler{
 
@@ -49,8 +50,6 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
     //shake listener
     protected ShakeListener SListener;
     protected SensorManager SManager;
-    public static boolean ShakeAllowed = true;
-
 
     //Database vars
     public static ContactDB DB;
@@ -170,6 +169,9 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
 
     }
 
+    /**
+     * Menu event for importing contacts from the old file system.
+     */
     public void MenuImport()
     {
         if(importer == null)
@@ -191,6 +193,9 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
         Toast.makeText(this, "MenuImport clicked.", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Menu event for clearing the database.
+     */
     public void MenuReinitialize()
     {
         DB.ReInitialize();
@@ -200,13 +205,12 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
     }
     ///endregion
 
+
     @Override
     public void onResume()
     {
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-
 
         if( preferences.getBoolean("pref_shake", true) )
         {
@@ -312,9 +316,9 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
      */
     public void onShake()
     {
-        Contact.AtoZ = !Contact.AtoZ;
+        DB.AtoZ = !DB.AtoZ;
         Adapter.changeCursor( DB.GetSortedList() );
-        Toast.makeText(this, "Contacts reversed.", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Contacts reversed.", Toast.LENGTH_SHORT).show();
     }
 
     ///region DEPRECATED METHODS
@@ -333,7 +337,7 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
      */
     protected void SortContacts(boolean AtoZ)
     {
-        Contact.AtoZ = AtoZ;
+        //Contact.AtoZ = AtoZ;
         //Collections.sort(ContactList);
         //Adapter.notifyDataSetChanged();
     }
@@ -346,7 +350,7 @@ public class CList extends AppCompatActivity implements AdapterView.OnItemClickL
      */
     public void SortContacts()
     {
-        SortContacts(Contact.AtoZ);
+        //SortContacts(Contact.AtoZ);
     }
 
 

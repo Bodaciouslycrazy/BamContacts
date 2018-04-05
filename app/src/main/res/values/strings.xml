@@ -8,11 +8,7 @@
     <string name="lblSort">Sort by...</string>
     <string name="btnImport">Import from Text File</string>
     <string name="btnReinitialize">Reinitialize Database</string>
-    <string-array name="sortOptions">
-        <item>First Name</item>
-        <item>Last Name</item>
-    </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="prefSortTite">Sort by...</string>
+    <string name="prefSortSummary">Choose if you want to sort your contacts by first name or last name.</string>
 </resources>

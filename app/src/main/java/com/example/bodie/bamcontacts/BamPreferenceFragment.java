@@ -11,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
+/**
+ * Simple fragment used to show the Settings screen.
+ * Simply shows R.xml.preferences
+ */
 public class BamPreferenceFragment extends PreferenceFragment {
 
     @Override
