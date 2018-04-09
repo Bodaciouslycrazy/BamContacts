@@ -7,171 +7,221 @@
     tools:context="com.example.bodie.bamcontacts.CView">
 
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/cviewToolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onSave"
-        android:text="Save"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/delButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onDelete"
-        android:text="Delete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/errorText"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/errorText"
-        android:textSize="18sp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/cviewToolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveButton" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <EditText
-        android:id="@+id/firstEdt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="8"
-        android:hint="First*"
-        android:imeOptions="actionNext"
-        android:inputType="textPersonName|textCapSentences"
-        android:nextFocusForward="@id/lastEdt"
-        app:layout_constraintEnd_toStartOf="@id/lastEdt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/errorText" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/lastEdt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="8"
-        android:hint="Last*"
-        android:imeOptions="actionNext"
-        android:inputType="textPersonName|textCapSentences"
-        android:nextFocusForward="@id/middleEdt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/firstEdt"
-        app:layout_constraintTop_toBottomOf="@+id/errorText" />
+            <EditText
+                android:id="@+id/firstEdt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="8"
+                android:hint="First*"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapSentences"
+                android:nextFocusForward="@id/lastEdt"
+                app:layout_constraintEnd_toStartOf="@id/lastEdt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/middleEdt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="2"
-        android:maxLength="1"
-        android:inputType="textNoSuggestions|textVisiblePassword"
-        android:hint="MI"
-        android:nextFocusForward="@id/phoneEdt"
-        android:imeOptions="actionNext"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstEdt" />
+            <EditText
+                android:id="@+id/lastEdt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="8"
+                android:hint="Last*"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapSentences"
+                android:nextFocusForward="@id/middleEdt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/firstEdt"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/phoneLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        android:text="Phone:"
-        android:textColor="@color/mainText"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/phoneEdt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/phoneEdt" />
+            <EditText
+                android:id="@+id/middleEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="2"
+                android:hint="MI"
+                android:imeOptions="actionNext"
+                android:inputType="textNoSuggestions|textVisiblePassword"
+                android:maxLength="1"
+                android:nextFocusForward="@id/phoneEdt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/firstEdt" />
 
-    <EditText
-        android:id="@+id/phoneEdt"
-        android:layout_width="wrap_content"
-        android:layout_height="46dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:hint="(555) 555-5555*"
-        android:imeOptions="actionDone"
-        android:inputType="phone"
-        app:layout_constraintStart_toEndOf="@+id/phoneLbl"
-        app:layout_constraintTop_toBottomOf="@+id/middleEdt" />
+            <TextView
+                android:id="@+id/phoneLbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:text="Phone:"
+                android:textColor="@color/mainText"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/phoneEdt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/phoneEdt" />
 
-    <TextView
-        android:id="@+id/bdayLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Birthday:"
-        android:textColor="@color/mainText"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/bdayEdt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/bdayEdt" />
+            <TextView
+                android:id="@+id/bdayLbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Birthday:"
+                android:textColor="@color/mainText"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/bdayEdt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/bdayEdt" />
 
-    <EditText
-        android:id="@+id/bdayEdt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="date"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:cursorVisible="false"
-        android:onClick="onClickDate"
-        android:hint="01/01/2018*"
-        app:layout_constraintStart_toEndOf="@+id/bdayLbl"
-        app:layout_constraintTop_toBottomOf="@+id/phoneEdt" />
+            <TextView
+                android:id="@+id/cdayLbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="FirstContact:"
+                android:textColor="@color/mainText"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/cdayEdt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cdayEdt" />
 
-    <TextView
-        android:id="@+id/cdayLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="FirstContact:"
-        android:textColor="@color/mainText"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/cdayEdt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cdayEdt" />
+            <EditText
+                android:id="@+id/phoneEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:ems="10"
+                android:hint="(555) 555-5555*"
+                android:imeOptions="actionDone"
+                android:inputType="phone"
+                app:layout_constraintStart_toEndOf="@+id/phoneLbl"
+                app:layout_constraintTop_toBottomOf="@+id/middleEdt" />
 
-    <EditText
-        android:id="@+id/cdayEdt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:cursorVisible="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:hint="01/01/2018*"
-        android:inputType="date"
-        android:onClick="onClickDate"
-        app:layout_constraintStart_toEndOf="@+id/cdayLbl"
-        app:layout_constraintTop_toBottomOf="@+id/bdayEdt" />
+            <EditText
+                android:id="@+id/bdayEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:cursorVisible="false"
+                android:ems="10"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="01/01/2018*"
+                android:inputType="date"
+                android:onClick="onClickDate"
+                app:layout_constraintStart_toEndOf="@+id/bdayLbl"
+                app:layout_constraintTop_toBottomOf="@+id/phoneEdt" />
+
+            <EditText
+                android:id="@+id/cdayEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:cursorVisible="false"
+                android:ems="10"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="01/01/2018*"
+                android:inputType="date"
+                android:onClick="onClickDate"
+                app:layout_constraintStart_toEndOf="@+id/cdayLbl"
+                app:layout_constraintTop_toBottomOf="@+id/bdayEdt" />
+
+            <EditText
+                android:id="@+id/address1Edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:hint="Address"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/lastEdt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cdayEdt" />
+
+            <EditText
+                android:id="@+id/address2Edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="Address line 2"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/lastEdt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/address1Edt" />
+
+
+            <EditText
+                android:id="@+id/cityEdt"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="City"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/lastEdt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/address2Edt" />
+
+            <EditText
+                android:id="@+id/zipEdt"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Zipcode"
+                android:inputType="number"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/lastEdt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cityEdt" />
+
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

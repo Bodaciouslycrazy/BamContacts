@@ -12,7 +12,7 @@ public class ContactDBHelper extends SQLiteOpenHelper {
 
 
     private static final String DBName = "ContactDB";
-    private static final int DBVersion = 1;
+    private static final int DBVersion = 2;
 
     //This string will create the Contacts table.
     private static final String SQL_CREATE_ENTRIES =
@@ -23,8 +23,21 @@ public class ContactDBHelper extends SQLiteOpenHelper {
             "middle CHAR, " +
             "phone TEXT NOT NULL, " +
             "birthday INTEGER, " +
-            "first_contact INTEGER" +
+            "first_contact INTEGER, " +
+            "address1 TEXT, " +
+            "address2 TEXT, " +
+            "city TEXT, " +
+            "state TEXT, " +
+            "zip INTEGER" +
             ");";
+
+    private static final String[] SQL_ADD_ADDRESSES = {
+            "address1 TEXT",
+            "address2 TEXT",
+            "city TEXT",
+            "state TEXT",
+            "zip INTEGER"
+    };
 
     public ContactDBHelper(Context ctx)
     {
@@ -52,7 +65,14 @@ public class ContactDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-
+        if(oldVersion < 2)
+        {
+            //Add address stuff
+            for(int i = 0; i < SQL_ADD_ADDRESSES.length; i++)
+            {
+                db.execSQL("ALTER TABLE Contacts ADD COLUMN " + SQL_ADD_ADDRESSES[i]);
+            }
+        }
     }
 
     /**

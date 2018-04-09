@@ -2,16 +2,22 @@ package com.example.bodie.bamcontacts;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.location.Address;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +44,8 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
     //*******************************************************************************
 
     //Error text will display error messages to user if they don't format their input right.
-    TextView ErrorText;
+    //ERROR IS NOW DISPLAYED USING TOASTS
+    //TextView ErrorText;
 
 
     //**************************USER INPUTS******************************************
@@ -48,6 +55,10 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
     protected EditText Phone;
     protected EditText Birthday;
     protected EditText ContactDay;
+    protected EditText Address1;
+    protected EditText Address2;
+    protected EditText City;
+    protected EditText Zip;
     //*******************************************************************************
 
     //Temp variables.
@@ -59,16 +70,21 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cview);
+        setSupportActionBar( (Toolbar) findViewById(R.id.cviewToolbar));
 
 
         //find and set every editText and textView.
-        ErrorText = findViewById(R.id.errorText);
+        //ErrorText = findViewById(R.id.errorText);
         First = findViewById(R.id.firstEdt);
         Last = findViewById(R.id.lastEdt);
         Middle = findViewById(R.id.middleEdt);
         Phone = findViewById(R.id.phoneEdt);
         Birthday = findViewById(R.id.bdayEdt);
         ContactDay = findViewById(R.id.cdayEdt);
+        Address1 = findViewById(R.id.address1Edt);
+        Address2 = findViewById(R.id.address2Edt);
+        City = findViewById(R.id.cityEdt);
+        Zip = findViewById(R.id.zipEdt);
 
 
         //Add phone formatter. This will make the phone number look nice while you are typing it.
@@ -120,17 +136,71 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
                 Birthday.setText(calendarToString(bday));
             if(cday != null)
                 ContactDay.setText(calendarToString(cday));
+
+            Address1.setText(CurrentContact.getAddress1());
+            Address2.setText(CurrentContact.getAddress2());
+            City.setText(CurrentContact.getCity());
+            String zip = CurrentContact.getZipcode() + "";
+
+            //SET STATE
+
+            Zip.setText(zip);
         }
     }
+
+    ///region MENU FUNCTIONS
+
+    /**
+     * Creates the options menu in the app bar.
+     * Option items are defined in menu_main.xml
+     * @param m
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu m)
+    {
+        MenuInflater mi = getMenuInflater();
+        mi.inflate(R.menu.menu_cview, m);
+        return true;
+    }
+
+    /**
+     * This gets a callback whenever an option item has been clicked.
+     * Use these for saving, deleting, and viewing address.
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+
+        Log.w("bwarn", "Menu Item has been selected: " + item.toString() );
+
+        switch(item.getItemId())
+        {
+            case R.id.menuSaveContact:
+                onSave();
+                break;
+            case R.id.menuDeleteContact:
+                onDelete();
+                break;
+            case R.id.menuShowAddress:
+                break;
+        }
+
+        return true;
+    }
+
+    ///endregion
 
     /**
      * The onClick event for the save button.
      * Compiles all the editText values into the contact, and returns it
      * to the CList activity.
      *
-     * @param v - View that called the event.
+     * @param
      */
-    protected void onSave(View v)
+    protected void onSave()
     {
         if ( !checkForRequiredFields() )
             return;
@@ -174,12 +244,32 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
         CurrentContact.setBirthday(bday);
         CurrentContact.setContactDate(cday);
 
+        CurrentContact.setAddress1(Address1.getText().toString());
+        CurrentContact.setAddress2(Address2.getText().toString());
+        CurrentContact.setCity(City.getText().toString());
+        //CurrentContact.setState();
 
-        Log.d("SavedContact", CurrentContact.getWriteableString());
+        String zipStr = Zip.getText().toString();
+        if(zipStr != null)
+            CurrentContact.setZipcode( Integer.parseInt(Zip.getText().toString()) );
 
+
+        Log.d("SavedContact", CurrentContact.getFullName());
         Intent I = new Intent();
         I.putExtra("contact", CurrentContact);
         setResult(RESULT_OK, I);
+        finish();
+    }
+
+    /**
+     * returns to the CList, indicating that the contact needs to be deleted.
+     * @param
+     */
+    protected void onDelete()
+    {
+        Intent I = new Intent();
+        I.putExtra("contact", CurrentContact);
+        setResult(RESULT_DELETED, I);
         finish();
     }
 
@@ -232,18 +322,6 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
         }
 
         return day;
-    }
-
-    /**
-     * returns to the CList, indicating that the contact needs to be deleted.
-     * @param v
-     */
-    protected void onDelete(View v)
-    {
-        Intent I = new Intent();
-        I.putExtra("contact", CurrentContact);
-        setResult(RESULT_DELETED, I);
-        finish();
     }
 
     /**
@@ -323,7 +401,7 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
      */
     protected void setErrorText(String err)
     {
-        ErrorText.setText(err);
+        Toast.makeText(this, err, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -332,7 +410,7 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
      */
     protected void setErrorText(int resId)
     {
-        ErrorText.setText(resId);
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
     }
 
 

@@ -25,6 +25,11 @@ public class Contact implements Serializable, Comparable<Contact>{
     protected String Phone;
     protected Calendar Birthday;
     protected Calendar ContactDate;
+    protected String Address1;
+    protected String Address2;
+    protected String City;
+    protected String State;
+    protected Integer Zipcode;
 
     public static final String DateFormat = "MM/dd/yyyy";
 
@@ -119,6 +124,31 @@ public class Contact implements Serializable, Comparable<Contact>{
         return ContactDate;
     }
 
+    public String getAddress1()
+    {
+        return Address1;
+    }
+
+    public String getAddress2()
+    {
+        return Address2;
+    }
+
+    public String getCity()
+    {
+        return City;
+    }
+
+    public String getState()
+    {
+        return State;
+    }
+
+    public Integer getZipcode()
+    {
+        return Zipcode;
+    }
+
     /**
      * Returns a string that can be used for perminant storage.
      * @return
@@ -161,6 +191,12 @@ public class Contact implements Serializable, Comparable<Contact>{
             cv.put("birthday", Birthday.getTimeInMillis());
         if(ContactDate != null)
             cv.put("first_contact", ContactDate.getTimeInMillis());
+        cv.put("address1", Address1);
+        cv.put("address2", Address2);
+        cv.put("city", City);
+        cv.put("state", State);
+        if(Zipcode != null)
+            cv.put("zip", Zipcode);
 
         return cv;
     }
@@ -204,6 +240,31 @@ public class Contact implements Serializable, Comparable<Contact>{
         ContactDate = d;
     }
 
+    public void setAddress1(String add)
+    {
+        Address1 = add;
+    }
+
+    public void setAddress2(String add)
+    {
+        Address2 = add;
+    }
+
+    public void setCity(String city)
+    {
+        City = city;
+    }
+
+    public void setState(String state)
+    {
+        State = state;
+    }
+
+    public void setZipcode(int zip)
+    {
+        Zipcode = zip;
+    }
+
     /**
      * Reads data from cursor and puts it into the object.
      * Make sure to not move the cursor in this method.
@@ -233,8 +294,11 @@ public class Contact implements Serializable, Comparable<Contact>{
             ContactDate.setTime( new Date(cmillis));
         }
 
-        //setBirthday( stringToCalendar( c.getString(c.getColumnIndexOrThrow("birthday")) ));
-        //setContactDate( stringToCalendar( c.getString(c.getColumnIndexOrThrow("first_contact"))));
+        setAddress1(c.getString(c.getColumnIndexOrThrow("address1")));
+        setAddress2(c.getString(c.getColumnIndexOrThrow("address2")));
+        setCity(c.getString(c.getColumnIndexOrThrow("city")));
+        setState(c.getString(c.getColumnIndexOrThrow("state")));
+        setZipcode(c.getInt(c.getColumnIndexOrThrow("zip")));
     }
 
     /**
