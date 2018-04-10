@@ -284,8 +284,10 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
         add.Address1 = Address1.getText().toString();
         add.Address2 = Address2.getText().toString();
         add.City = City.getText().toString();
-        add.State = "UNIMPLEMENTED";
+        add.State = "TX";
         add.Zipcode = Integer.parseInt( Zip.getText().toString() );
+        I.putExtra("address", add);
+
         startActivity(I);
     }
 
