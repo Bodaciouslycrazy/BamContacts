@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">BamContacts</string>
+
     <string name="requiredFirst">The first name field is required.</string>
     <string name="requiredLast">The last name field is required.</string>
     <string name="requiredPhone">The phone number field is required.</string>
     <string name="errPhone">The phone number is not in the correct format.</string>
+    <string name="stateSpinner">State</string>
     <string name="lblShake">Shake to Reverse</string>
     <string name="lblSort">Sort by...</string>
     <string name="btnImport">Import from Text File</string>
@@ -12,4 +14,5 @@
     <string name="prefSortTite">Sort by...</string>
     <string name="prefSortSummary">Choose if you want to sort your contacts by first name or last name.</string>
     <string name="title_activity_map">Map</string>
+
 </resources>

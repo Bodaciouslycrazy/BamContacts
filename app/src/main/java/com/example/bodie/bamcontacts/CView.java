@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,7 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
     protected EditText Address1;
     protected EditText Address2;
     protected EditText City;
+    protected Spinner  State;
     protected EditText Zip;
     //*******************************************************************************
 
@@ -84,6 +86,7 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
         Address1 = findViewById(R.id.address1Edt);
         Address2 = findViewById(R.id.address2Edt);
         City = findViewById(R.id.cityEdt);
+        State = findViewById(R.id.stateEdt);
         Zip = findViewById(R.id.zipEdt);
 
 
@@ -141,7 +144,7 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
             Address2.setText(CurrentContact.getAddress2());
             City.setText(CurrentContact.getCity());
 
-            //SET STATE
+            State.setSelection( getStateIndex(CurrentContact.getState()) );
 
             Integer tmpZip;
             if((tmpZip = CurrentContact.getZipcode()) != null)
@@ -149,6 +152,19 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
                 Zip.setText(tmpZip.toString());
             }
         }
+    }
+
+    public int getStateIndex(String st)
+    {
+        for(int i = 0; i < State.getCount(); i++)
+        {
+            if(State.getItemAtPosition(i).toString().equalsIgnoreCase(st))
+            {
+                return i;
+            }
+        }
+
+        return 0;
     }
 
     ///region MENU FUNCTIONS
@@ -251,6 +267,11 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
         CurrentContact.setAddress1(Address1.getText().toString());
         CurrentContact.setAddress2(Address2.getText().toString());
         CurrentContact.setCity(City.getText().toString());
+
+        String tempState = String.valueOf( State.getSelectedItem() );
+        if(!tempState.equals("State"))
+            CurrentContact.setState(tempState);
+
         //CurrentContact.setState();
 
         String zipStr = Zip.getText().toString();
@@ -284,9 +305,12 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
         add.Address1 = Address1.getText().toString();
         add.Address2 = Address2.getText().toString();
         add.City = City.getText().toString();
-        add.State = "TX";
+        add.State = State.getSelectedItem().toString();
+        if(add.State.equalsIgnoreCase("State"))
+            add.State = null;
         add.Zipcode = Integer.parseInt( Zip.getText().toString() );
         I.putExtra("address", add);
+        I.putExtra("name", CurrentContact.getFullName() );
 
         startActivity(I);
     }

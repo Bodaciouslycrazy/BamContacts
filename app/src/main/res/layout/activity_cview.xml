@@ -159,6 +159,7 @@
                 android:hint="01/01/2018*"
                 android:inputType="date"
                 android:onClick="onClickDate"
+                android:nextFocusForward="@id/address1Edt"
                 app:layout_constraintStart_toEndOf="@+id/cdayLbl"
                 app:layout_constraintTop_toBottomOf="@+id/bdayEdt" />
 
@@ -171,7 +172,7 @@
                 android:layout_marginTop="24dp"
                 android:hint="Address"
                 android:imeOptions="actionNext"
-                android:nextFocusForward="@id/lastEdt"
+                android:nextFocusForward="@id/address2Edt"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cdayEdt" />
@@ -185,7 +186,7 @@
                 android:layout_marginTop="8dp"
                 android:hint="Address line 2"
                 android:imeOptions="actionNext"
-                android:nextFocusForward="@id/lastEdt"
+                android:nextFocusForward="@id/cityEdt"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/address1Edt" />
@@ -201,9 +202,26 @@
                 android:ems="10"
                 android:hint="City"
                 android:imeOptions="actionNext"
-                android:nextFocusForward="@id/lastEdt"
+                android:nextFocusForward="@id/stateEdt"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/address2Edt" />
+
+            <Spinner
+                android:id="@+id/stateEdt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:entries="@array/stateArray"
+                android:prompt="@string/stateSpinner"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/zipEdt"
+                app:layout_constraintBottom_toBottomOf="@+id/cityEdt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cityEdt"
+                app:layout_constraintTop_toTopOf="@+id/cityEdt" />
 
             <EditText
                 android:id="@+id/zipEdt"
@@ -215,10 +233,11 @@
                 android:ems="10"
                 android:hint="Zipcode"
                 android:inputType="number"
-                android:imeOptions="actionNext"
-                android:nextFocusForward="@id/lastEdt"
+                android:imeOptions="actionDone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cityEdt" />
+
+
 
 
         </android.support.constraint.ConstraintLayout>

@@ -1,7 +1,13 @@
 package com.example.bodie.bamcontacts;
 
+import android.Manifest;
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.PermissionChecker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,6 +17,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.security.Provider;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, LocationHandler {
 
@@ -59,6 +67,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+
+    /**
+     * callback function from AsyncGeocode.
+     * places a marker and zooms in on the location of the address.
+     * @param location
+     */
     @Override
     public void onLocationFound(LatLng location)
     {
@@ -71,15 +85,36 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             Lon.setText(lon);
 
             MarkerOptions mo = new MarkerOptions().position(location);
-            mo.title("Contact");
+            mo.title(getIntent().getStringExtra("name"));
 
-            mMap.addMarker(new MarkerOptions().position(location).title("Contact"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
+            mMap.addMarker(mo);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14));
         }
         else
         {
             //There was an error finding the location.
             Toast.makeText(this, "There was an error mapping that address.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void findCurrentLocation()
+    {
+        int permFine = PermissionChecker.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permCoarse = PermissionChecker.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if(permFine != PermissionChecker.PERMISSION_GRANTED && permCoarse != PermissionChecker.PERMISSION_GRANTED)
+        {
+            Toast.makeText(this, "Do not have location permissions.", Toast.LENGTH_SHORT).show();
+        }
+
+        LocationManager locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Criteria crit = new Criteria();
+        crit.setPowerRequirement(Criteria.POWER_MEDIUM);
+        crit.setAltitudeRequired(false);
+        crit.setBearingRequired(false);
+        crit.setSpeedRequired(false);
+        String prov = locMan.getBestProvider(crit ,true);
+
+        Location loc = locMan.getLastKnownLocation(prov);
     }
 }
