@@ -3,6 +3,7 @@ package com.example.bodie.bamcontacts;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,8 +38,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -48,6 +48,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMap = googleMap;
 
         Geocoder = new AsyncGeocode();
+        int keyId = getResources().getIdentifier("google_maps_key", "string", getPackageName());
+        Geocoder.apiKey = getString(keyId);
         Geocoder.handler = this;
         Geocoder.execute( (MapAddress)getIntent().getSerializableExtra("address") );
 
@@ -60,13 +62,24 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onLocationFound(LatLng location)
     {
-        String lat = location.latitude + "";
-        String lon = location.longitude + "";
+        if(location != null)
+        {
+            String lat = location.latitude + "";
+            String lon = location.longitude + "";
 
-        Lat.setText(lat);
-        Lon.setText(lon);
+            Lat.setText(lat);
+            Lon.setText(lon);
 
-        mMap.addMarker(new MarkerOptions().position(location).title("Contact"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+            MarkerOptions mo = new MarkerOptions().position(location);
+            mo.title("Contact");
+
+            mMap.addMarker(new MarkerOptions().position(location).title("Contact"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
+        }
+        else
+        {
+            //There was an error finding the location.
+            Toast.makeText(this, "There was an error mapping that address.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.example.bodie.bamcontacts;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 import android.util.Log;
+import android.widget.ResourceCursorTreeAdapter;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -21,8 +23,9 @@ import java.util.ArrayList;
 
 public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
 
-    protected static final String appURL = "http://maps.googleapis.com/maps/api/geocode/json?";
+    protected static final String appURL = "https://maps.googleapis.com/maps/api/geocode/json?";
     protected static final String appURLend = "&sensor=true_or_false";
+    public String apiKey = "";
 
     public LocationHandler handler;
 
@@ -60,6 +63,7 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
             }
             else
             {
+                Log.e("berror", "Bad response code.");
                 return null;
             }
         }
@@ -81,7 +85,9 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
     protected String makeURLArg(MapAddress add)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append(appURL).append("address=");
+        sb.append(appURL);
+        sb.append("key=").append( apiKey );
+        sb.append("&address=");
 
         String[] split = add.Address1.split(" ");
         for(int i = 0; i < split.length; i++)
@@ -107,6 +113,8 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
     protected LatLng readJSON(JsonReader reader) throws Exception
     {
         ArrayList<LatLng> locations = new ArrayList<LatLng>();
+        String em = "ERROR NOT FOUND";
+        boolean error = false;
 
         reader.beginObject();
         while(reader.hasNext())
@@ -117,6 +125,11 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
             {
                 locations = readResultArray( reader );
             }
+            else if(name.equals("error_message"))
+            {
+                error = true;
+                em = reader.nextString();
+            }
             else
             {
                 reader.skipValue();
@@ -125,7 +138,14 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
         reader.endObject();
         reader.close();
 
-        Log.d("bebug", "Found " + locations.size() + " locations in json.");
+        if(error)
+        {
+            Log.e("berror", em);
+            //Toast.makeText(this, em, Toast.LENGTH_SHORT).show();
+        }
+        else
+            Log.d("bebug", "Found " + locations.size() + " locations in json.");
+
         return locations.get(0);
     }
 
