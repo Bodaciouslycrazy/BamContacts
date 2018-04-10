@@ -11,4 +11,5 @@
 
     <string name="prefSortTite">Sort by...</string>
     <string name="prefSortSummary">Choose if you want to sort your contacts by first name or last name.</string>
+    <string name="title_activity_map">Map</string>
 </resources>

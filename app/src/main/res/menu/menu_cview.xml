@@ -14,8 +14,8 @@
         app:showAsAction="collapseActionView" />
 
     <item
-        android:id="@+id/menuShowAddress"
-        android:title="Show Address"
+        android:id="@+id/menuMapAddress"
+        android:title="Map Address"
         app:showAsAction="collapseActionView" />
 
 </menu>

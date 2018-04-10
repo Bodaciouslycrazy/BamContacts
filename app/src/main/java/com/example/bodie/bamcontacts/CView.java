@@ -140,11 +140,14 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
             Address1.setText(CurrentContact.getAddress1());
             Address2.setText(CurrentContact.getAddress2());
             City.setText(CurrentContact.getCity());
-            String zip = CurrentContact.getZipcode() + "";
 
             //SET STATE
 
-            Zip.setText(zip);
+            Integer tmpZip;
+            if((tmpZip = CurrentContact.getZipcode()) != null)
+            {
+                Zip.setText(tmpZip.toString());
+            }
         }
     }
 
@@ -184,7 +187,8 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
             case R.id.menuDeleteContact:
                 onDelete();
                 break;
-            case R.id.menuShowAddress:
+            case R.id.menuMapAddress:
+                onMapAddress();
                 break;
         }
 
@@ -271,6 +275,18 @@ public class CView extends AppCompatActivity implements DatePickerDialog.OnDateS
         I.putExtra("contact", CurrentContact);
         setResult(RESULT_DELETED, I);
         finish();
+    }
+
+    protected void onMapAddress()
+    {
+        Intent I = new Intent(this, MapActivity.class);
+        MapAddress add = new MapAddress();
+        add.Address1 = Address1.getText().toString();
+        add.Address2 = Address2.getText().toString();
+        add.City = City.getText().toString();
+        add.State = "UNIMPLEMENTED";
+        add.Zipcode = Integer.parseInt( Zip.getText().toString() );
+        startActivity(I);
     }
 
 
