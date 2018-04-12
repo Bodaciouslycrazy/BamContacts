@@ -6,9 +6,9 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by Bodie on 4/9/2018.
  */
 
-public interface LocationHandler {
+public interface GeoLocationHandler {
 
-    public void onLocationFound(LatLng location);
+    public void onContactFound(LatLng location);
 
 
 }

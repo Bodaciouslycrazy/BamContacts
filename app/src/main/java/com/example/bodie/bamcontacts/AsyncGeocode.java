@@ -3,12 +3,9 @@ package com.example.bodie.bamcontacts;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 import android.util.Log;
-import android.widget.ResourceCursorTreeAdapter;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -27,7 +24,7 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
     protected static final String appURLend = "&sensor=true_or_false";
     public String apiKey = "";
 
-    public LocationHandler handler;
+    public GeoLocationHandler handler;
 
     @Override
     public LatLng doInBackground(MapAddress[] args)
@@ -79,7 +76,7 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
     public void onPostExecute(LatLng location)
     {
         if(handler != null)
-            handler.onLocationFound(location);
+            handler.onContactFound(location);
     }
 
     protected String makeURLArg(MapAddress add)
