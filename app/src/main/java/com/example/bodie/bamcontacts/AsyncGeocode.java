@@ -26,6 +26,12 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
 
     public GeoLocationHandler handler;
 
+    /**
+     * Do in background
+     * Mainly just sets up http connection and reads data.
+     * @param args
+     * @return
+     */
     @Override
     public LatLng doInBackground(MapAddress[] args)
     {
@@ -72,6 +78,10 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
 
     }
 
+    /**
+     * Sends the location found to the handler.
+     * @param location
+     */
     @Override
     public void onPostExecute(LatLng location)
     {
@@ -79,6 +89,11 @@ public class AsyncGeocode extends AsyncTask<MapAddress, Integer, LatLng> {
             handler.onContactFound(location);
     }
 
+    /**
+     * Creates a URL string with arguments based on your address.
+     * @param add
+     * @return
+     */
     protected String makeURLArg(MapAddress add)
     {
         StringBuilder sb = new StringBuilder();

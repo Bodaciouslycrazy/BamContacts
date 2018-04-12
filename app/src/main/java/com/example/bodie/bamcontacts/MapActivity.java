@@ -30,11 +30,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     private GoogleMap mMap;
 
+    //Text views
     protected TextView Lat;
     protected TextView Lng;
     protected TextView Dist;
 
-    //protected LatLng UserPos;
+
+    //Markers
     protected Marker UserMarker;
     protected Marker ContactMarker;
 
@@ -243,6 +245,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
 
     ///region LOCATION LISTENER METHODS
+
+    /**
+     * Recieves the device's location.
+     *
+     * Use it to update the marker on the map and calculate distance.
+     * @param loc
+     */
     @Override
     public void onLocationChanged(Location loc)
     {
